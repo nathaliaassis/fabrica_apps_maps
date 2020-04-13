@@ -1,114 +1,75 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow strict-local
- */
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import MapView from 'react-native-maps';
 
-import React from 'react';
-import {
-  SafeAreaView,
-  StyleSheet,
-  ScrollView,
-  View,
-  Text,
-  StatusBar,
-} from 'react-native';
+export default function App() {
+  const [region, setRegion] = useState({
+    latitude: -15.7768263,
+    longitude: -47.9008514,
+    latitudeDelta: 0.0922,
+    longitudeDelta: 0.0421,
+  });
 
-import {
-  Header,
-  LearnMoreLinks,
-  Colors,
-  DebugInstructions,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
-
-const App: () => React$Node = () => {
+  function alterarCidade(lat, long) {
+    setRegion({
+      latitude: lat,
+      longitude: long,
+      latitudeDelta: 0.0922,
+      longitudeDelta: 0.0421,
+    });
+  }
   return (
-    <>
-      <StatusBar barStyle="dark-content" />
-      <SafeAreaView>
-        <ScrollView
-          contentInsetAdjustmentBehavior="automatic"
-          style={styles.scrollView}>
-          <Header />
-          {global.HermesInternal == null ? null : (
-            <View style={styles.engine}>
-              <Text style={styles.footer}>Engine: Hermes</Text>
-            </View>
-          )}
-          <View style={styles.body}>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Step One</Text>
-              <Text style={styles.sectionDescription}>
-                Edit <Text style={styles.highlight}>App.js</Text> to change this
-                screen and then come back to see your edits.
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>See Your Changes</Text>
-              <Text style={styles.sectionDescription}>
-                <ReloadInstructions />
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Debug</Text>
-              <Text style={styles.sectionDescription}>
-                <DebugInstructions />
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Learn More</Text>
-              <Text style={styles.sectionDescription}>
-                Read the docs to discover what to do next:
-              </Text>
-            </View>
-            <LearnMoreLinks />
-          </View>
-        </ScrollView>
-      </SafeAreaView>
-    </>
+    <View style={styles.container}>
+      <Text style={styles.title}> Projeto zMapas</Text>
+      <MapView style={styles.maps} region={region} />
+      <View style={styles.areaBtns}>
+        <TouchableOpacity
+          style={styles.btn}
+          onPress={() => alterarCidade(-23.5492243, -46.5813785)}>
+          <Text style={styles.btnText}>São Paulo</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.btn}
+          onPress={() => alterarCidade(-15.7768263, -47.9008514)}>
+          <Text style={styles.btnText}>Brasília</Text>
+        </TouchableOpacity>
+      </View>
+    </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
-  scrollView: {
-    backgroundColor: Colors.lighter,
+  container: {
+    flex: 1,
+    backgroundColor: '#f9f9f9',
   },
-  engine: {
-    position: 'absolute',
-    right: 0,
+  title: {
+    fontSize: 28,
+    fontWeight: 'bold',
+    color: '#222',
+    textAlign: 'center',
+    textTransform: 'uppercase',
+    marginVertical: 12,
   },
-  body: {
-    backgroundColor: Colors.white,
+  maps: {
+    width: '100%',
+    height: 500,
   },
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
+  areaBtns: {
+    padding: 15,
+    flexDirection: 'row',
+    justifyContent: 'space-around',
   },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-    color: Colors.black,
+  btn: {
+    backgroundColor: '#123456',
+    height: 45,
+    width: '30%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 5,
   },
-  sectionDescription: {
-    marginTop: 8,
+  btnText: {
     fontSize: 18,
-    fontWeight: '400',
-    color: Colors.dark,
-  },
-  highlight: {
-    fontWeight: '700',
-  },
-  footer: {
-    color: Colors.dark,
-    fontSize: 12,
-    fontWeight: '600',
-    padding: 4,
-    paddingRight: 12,
-    textAlign: 'right',
+    color: 'white',
   },
 });
-
-export default App;

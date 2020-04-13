@@ -77,6 +77,8 @@ target 'fabrica_apps_maps' do
   pod 'glog', :podspec => '../node_modules/react-native/third-party-podspecs/glog.podspec'
   pod 'Folly', :podspec => '../node_modules/react-native/third-party-podspecs/Folly.podspec'
 
+  pod 'react-native-maps', :path => '../node_modules/react-native-maps'
+
   target 'fabrica_apps_mapsTests' do
     inherit! :complete
     # Pods for testing
