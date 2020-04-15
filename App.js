@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import MapView from 'react-native-maps';
+import MapView, { Marker } from 'react-native-maps';
 
 export default function App() {
   const [region, setRegion] = useState({
@@ -9,6 +9,33 @@ export default function App() {
     latitudeDelta: 0.0922,
     longitudeDelta: 0.0421,
   });
+
+  const [markers, setMarkers] = useState([
+    {
+      key: 0,
+      coords: {
+        latitude: -15.7768263,
+        longitude: -47.9008514,
+      },
+      pinColor: '#ff0000',
+    },
+    {
+      key: 1,
+      coords: {
+        latitude: -15.7868263,
+        longitude: -47.9208514,
+      },
+      pinColor: '#0000ff',
+    },
+    {
+      key: 2,
+      coords: {
+        latitude: -15.7968263,
+        longitude: -47.9508514,
+      },
+      pinColor: '#00ff00',
+    },
+  ]);
 
   function alterarCidade(lat, long) {
     setRegion({
@@ -21,7 +48,13 @@ export default function App() {
   return (
     <View style={styles.container}>
       <Text style={styles.title}> Projeto zMapas</Text>
-      <MapView style={styles.maps} region={region} />
+      <MapView style={styles.maps} region={region}>
+        {markers.map((m) => {
+          return (
+            <Marker key={m.key} coordinate={m.coords} pinColor={m.pinColor} />
+          );
+        })}
+      </MapView>
       <View style={styles.areaBtns}>
         <TouchableOpacity
           style={styles.btn}
