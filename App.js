@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 
@@ -10,33 +10,6 @@ export default function App() {
     longitudeDelta: 0.0421,
   });
 
-  const [markers, setMarkers] = useState([
-    {
-      key: 0,
-      coords: {
-        latitude: -15.7768263,
-        longitude: -47.9008514,
-      },
-      pinColor: '#ff0000',
-    },
-    {
-      key: 1,
-      coords: {
-        latitude: -15.7868263,
-        longitude: -47.9208514,
-      },
-      pinColor: '#0000ff',
-    },
-    {
-      key: 2,
-      coords: {
-        latitude: -15.7968263,
-        longitude: -47.9508514,
-      },
-      pinColor: '#00ff00',
-    },
-  ]);
-
   function alterarCidade(lat, long) {
     setRegion({
       latitude: lat,
@@ -45,10 +18,43 @@ export default function App() {
       longitudeDelta: 0.0421,
     });
   }
+
+  const [markers, setMarkers] = useState([
+    {
+      key: 0,
+      coords: { latitude: -15.7768263, longitude: -47.9008514 },
+      pinColor: '#ff0000',
+    },
+    {
+      key: 1,
+      coords: { latitude: -15.7868263, longitude: -47.9208514 },
+      pinColor: '#0000ff',
+    },
+    {
+      key: 2,
+      coords: { latitude: -15.7968263, longitude: -47.9508514 },
+      pinColor: '#00ff00',
+    },
+  ]);
+
+  function newMarker(e) {
+    markers.push({
+      key: markers.length,
+      coords: {
+        latitude: e.nativeEvent.coordinate.latitude,
+        longitude: e.nativeEvent.coordinate.longitude,
+      },
+      pinColor: '#ff0000',
+    });
+    setMarkers(markers);
+  }
   return (
     <View style={styles.container}>
-      <Text style={styles.title}> Projeto zMapas</Text>
-      <MapView style={styles.maps} region={region}>
+      <Text style={styles.title}> MyMap</Text>
+      <MapView
+        style={styles.maps}
+        region={region}
+        onPress={(e) => newMarker(e)}>
         {markers.map((m) => {
           return (
             <Marker key={m.key} coordinate={m.coords} pinColor={m.pinColor} />
