@@ -120,8 +120,8 @@ export default class App extends Component {
               origin={this.state.region}
               destination={this.state.destLocation}
               apikey="AIzaSyAtIeXAJ1qT-4WhTRmz3_0mK9lxK70LHNk"
-              strokeWidth={3}
-              strokeColor="#123456"
+              strokeWidth={2}
+              strokeColor="#ff7777"
               onReady={(result) => {
                 this.map.fitToCoordinates(result.coordinates, {
                   edgePadding: {
