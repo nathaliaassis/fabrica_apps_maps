@@ -6,8 +6,11 @@ import {
   TouchableOpacity,
   ScrollView,
 } from 'react-native';
+import { getPixel } from './src/utils';
+
 import MapView, { Marker, Callout } from 'react-native-maps';
 import Geolocation from '@react-native-community/geolocation';
+import MapViewDirections from 'react-native-maps-directions';
 
 export default class App extends Component {
   constructor(props) {
@@ -15,6 +18,7 @@ export default class App extends Component {
 
     this.state = {
       region: null,
+      destLocation: null,
 
       markers: [
         {
@@ -41,6 +45,7 @@ export default class App extends Component {
     };
     this.alterarCidade = this.alterarCidade.bind(this);
     this.newMarker = this.newMarker.bind(this);
+    this.novoDestino = this.novoDestino.bind(this);
   }
   componentDidMount() {
     Geolocation.getCurrentPosition(
@@ -58,6 +63,7 @@ export default class App extends Component {
       {
         timeout: 2000,
         maximumAge: 1000,
+        enableHighAccuracy: true,
       },
     );
   }
@@ -88,21 +94,47 @@ export default class App extends Component {
     state.region = region;
     this.setState(state);
   }
+  novoDestino(lat, long) {
+    this.setState({
+      destLocation: {
+        latitude: lat,
+        longitude: long,
+      },
+    });
+  }
   render() {
     const { region, markers } = this.state;
     return (
       <ScrollView style={styles.container}>
-        <Text style={styles.title}> MyMap</Text>
         <MapView
           ref={(map) => {
             this.map = map;
           }}
           style={styles.maps}
           region={region}
-          onPress={this.newMarker}
+          // onPress={this.newMarker}
           showsUserLocation
           loadingEnabled>
-          {markers.map((m) => {
+          {this.state.destLocation && (
+            <MapViewDirections
+              origin={this.state.region}
+              destination={this.state.destLocation}
+              apikey="AIzaSyAtIeXAJ1qT-4WhTRmz3_0mK9lxK70LHNk"
+              strokeWidth={3}
+              strokeColor="#123456"
+              onReady={(result) => {
+                this.map.fitToCoordinates(result.coordinates, {
+                  edgePadding: {
+                    right: getPixel(50),
+                    left: getPixel(50),
+                    top: getPixel(50),
+                    bottom: getPixel(50),
+                  },
+                });
+              }}
+            />
+          )}
+          {/* {markers.map((m) => {
             return (
               <Marker image={m.image} key={m.key} coordinate={m.coords}>
                 <View style={[styles.viewMarker, { backgroundColor: m.color }]}>
@@ -115,8 +147,53 @@ export default class App extends Component {
                 </Callout>
               </Marker>
             );
-          })}
+          })} */}
         </MapView>
+        <ScrollView
+          style={styles.box}
+          horizontal={true}
+          showsHorizontalScrollIndicator={false}>
+          <View style={styles.localView}>
+            {/* 15.8418868,-48.0526351 */}
+            <TouchableOpacity
+              style={styles.localBtn}
+              onPress={() => this.novoDestino(-15.8418868, -48.0526351)}>
+              <Text style={styles.localText}>Burger King</Text>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.localView}>
+            {/* 15.8419128,-48.046069 */}
+            <TouchableOpacity
+              style={styles.localBtn}
+              onPress={() => this.novoDestino(-15.8419128, -48.046069)}>
+              <Text style={styles.localText}>Shopping</Text>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.localView}>
+            {/* 15.8406292,-48.0236391 */}
+            <TouchableOpacity
+              style={styles.localBtn}
+              onPress={() => this.novoDestino(-15.8406292, -48.0236391)}>
+              <Text style={styles.localText}>Farmácia</Text>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.localView}>
+            {/* 15.8391276,-48.0409236 */}
+            <TouchableOpacity
+              style={styles.localBtn}
+              onPress={() => this.novoDestino(-15.8391276, -48.0409236)}>
+              <Text style={styles.localText}>Padaria</Text>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.localView}>
+            {/* 15.8391173,-48.0409236 */}
+            <TouchableOpacity
+              style={styles.localBtn}
+              onPress={() => this.novoDestino(-15.8391173, -48.0409236)}>
+              <Text style={styles.localText}>Pizzaria</Text>
+            </TouchableOpacity>
+          </View>
+        </ScrollView>
         <View style={styles.areaBtns}>
           <TouchableOpacity
             style={styles.btn}
@@ -142,14 +219,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#f9f9f9',
-  },
-  title: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    color: '#222',
-    textAlign: 'center',
-    textTransform: 'uppercase',
-    marginVertical: 12,
   },
   maps: {
     width: '100%',
@@ -194,5 +263,30 @@ const styles = StyleSheet.create({
   tooltipText: {
     color: '#313131',
     fontSize: 14,
+  },
+  box: {
+    position: 'absolute',
+    top: 16,
+    margin: 16,
+    height: 70,
+  },
+  localView: {
+    height: 40,
+    padding: 8,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 5,
+  },
+  localBtn: {
+    padding: 8,
+    paddingHorizontal: 20,
+    backgroundColor: '#ff5555',
+    height: 40,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 5,
+  },
+  localText: {
+    color: '#fff',
   },
 });
