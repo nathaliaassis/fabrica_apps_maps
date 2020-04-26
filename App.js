@@ -7,18 +7,14 @@ import {
   ScrollView,
 } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
+import Geolocation from '@react-native-community/geolocation';
 
 export default class App extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      region: {
-        latitude: -15.7768263,
-        longitude: -47.9008514,
-        latitudeDelta: 0.0922,
-        longitudeDelta: 0.0421,
-      },
+      region: null,
 
       markers: [
         {
@@ -33,7 +29,7 @@ export default class App extends Component {
         },
         {
           key: 2,
-          image: require('./src/assets/img/carro_down.png'),
+          color: '#ff6665',
           coords: { latitude: -15.7968263, longitude: -47.9508514 },
         },
       ],
@@ -41,7 +37,25 @@ export default class App extends Component {
     this.alterarCidade = this.alterarCidade.bind(this);
     this.newMarker = this.newMarker.bind(this);
   }
-
+  componentDidMount() {
+    Geolocation.getCurrentPosition(
+      ({ coords: { latitude, longitude } }) => {
+        this.setState({
+          region: {
+            latitude: latitude,
+            longitude: longitude,
+            latitudeDelta: 0.0922,
+            longitudeDelta: 0.0421,
+          },
+        });
+      },
+      () => { },
+      {
+        timeout: 2000,
+        maximumAge: 1000,
+      },
+    );
+  }
   newMarker(e) {
     let state = this.state;
 
@@ -74,9 +88,20 @@ export default class App extends Component {
     return (
       <ScrollView style={styles.container}>
         <Text style={styles.title}> MyMap</Text>
-        <MapView style={styles.maps} region={region} onPress={this.newMarker}>
+        <MapView
+          style={styles.maps}
+          region={region}
+          onPress={this.newMarker}
+          showsUserLocation
+          loadingEnabled>
           {markers.map((m) => {
-            return <Marker image={m.image} key={m.key} coordinate={m.coords} />;
+            return (
+              <Marker image={m.image} key={m.key} coordinate={m.coords}>
+                <View style={[styles.viewMarker, { backgroundColor: m.color }]}>
+                  <Text style={styles.textMarker}>olá</Text>
+                </View>
+              </Marker>
+            );
           })}
         </MapView>
         <View style={styles.areaBtns}>
@@ -132,6 +157,16 @@ const styles = StyleSheet.create({
   },
   btnText: {
     fontSize: 18,
+    color: 'white',
+  },
+  viewMarker: {
+    padding: 5,
+    borderRadius: 4,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  textMarker: {
     color: 'white',
   },
 });
