@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   ScrollView,
 } from 'react-native';
-import MapView, { Marker } from 'react-native-maps';
+import MapView, { Marker, Callout } from 'react-native-maps';
 import Geolocation from '@react-native-community/geolocation';
 
 export default class App extends Component {
@@ -30,7 +30,12 @@ export default class App extends Component {
         {
           key: 2,
           color: '#ff6665',
-          coords: { latitude: -15.7968263, longitude: -47.9508514 },
+          coords: { latitude: -15.8188182, longitude: -48.0922574 },
+        },
+        {
+          key: 3,
+          color: '#aaffaa',
+          coords: { latitude: -15.8274373, longitude: -48.0905635 },
         },
       ],
     };
@@ -89,6 +94,9 @@ export default class App extends Component {
       <ScrollView style={styles.container}>
         <Text style={styles.title}> MyMap</Text>
         <MapView
+          ref={(map) => {
+            this.map = map;
+          }}
           style={styles.maps}
           region={region}
           onPress={this.newMarker}
@@ -100,6 +108,11 @@ export default class App extends Component {
                 <View style={[styles.viewMarker, { backgroundColor: m.color }]}>
                   <Text style={styles.textMarker}>olá</Text>
                 </View>
+                <Callout tooltip={true}>
+                  <View style={styles.viewTooltip}>
+                    <Text style={styles.tooltipText}>eae</Text>
+                  </View>
+                </Callout>
               </Marker>
             );
           })}
@@ -168,5 +181,18 @@ const styles = StyleSheet.create({
   },
   textMarker: {
     color: 'white',
+  },
+  viewTooltip: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: 100,
+    width: 100,
+    backgroundColor: '#ddd',
+    padding: 5,
+  },
+  tooltipText: {
+    color: '#313131',
+    fontSize: 14,
   },
 });
